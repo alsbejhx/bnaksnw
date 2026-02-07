@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بنك سنو ❤️‍🩹</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>
+        :root {
+            --neon-blue: #00f2ff;
+            --glass: rgba(0, 0, 0, 0.85);
+        }
+
+        body, html {
+            margin: 0; padding: 0; height: 100%; width: 100%;
+            font-family: 'Segoe UI', sans-serif;
+            overflow-x: hidden; transition: 0.5s;
+        }
+
+        .bg-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://images.alphacoders.com/132/1322502.jpeg') no-repeat center center fixed;
+            background-size: cover; z-index: -2; filter: brightness(0.4);
+        }
+
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: black; display: flex; justify-content: center; align-items: center;
+            z-index: 9999; color: var(--neon-blue); font-size: 24px;
+        }
+
+        .login-container { display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .neon-box {
+            background: var(--glass); padding: 35px; border-radius: 20px;
+            border: 2px solid var(--neon-blue); box-shadow: 0 0 20px var(--neon-blue), inset 0 0 10px var(--neon-blue);
+            text-align: center; color: white; position: relative; margin-bottom: 20px;
+        }
+        .neon-input {
+            display: block; width: 260px; padding: 12px; margin: 15px auto;
+            background: rgba(255,255,255,0.1); border: 1px solid var(--neon-blue);
+            border-radius: 8px; color: white; text-align: center; outline: none;
+        }
+        .neon-btn {
+            padding: 12px 40px; background: transparent; color: var(--neon-blue);
+            border: 2px solid var(--neon-blue); border-radius: 10px;
+            cursor: pointer; font-weight: bold; box-shadow: 0 0 15px var(--neon-blue); transition: 0.3s;
+        }
+        .neon-btn:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 35px var(--neon-blue); }
+
+        .top-controls { position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px; }
+        .theme-btn { padding: 8px 15px; border-radius: 20px; border: none; cursor: pointer; font-weight: bold; }
+        .falling { position: fixed; top: -50px; z-index: 999; pointer-events: none; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+        #main-app { display: none; padding: 20px; padding-bottom: 100px; color: white; }
+        .section { display: none; animation: fadeIn 0.5s; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .mada-card {
+            width: 320px; height: 180px; background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            border-radius: 15px; margin: 20px auto; padding: 20px; color: white; position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; color: white; }
+        th, td { padding: 10px; border-bottom: 1px solid #333; text-align: center; }
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: #000;
+            display: flex; justify-content: space-around; padding: 12px 0; border-top: 2px solid var(--neon-blue);
+        }
+        .nav-item { color: white; background: none; border: none; cursor: pointer; text-align: center; }
+        
+        .footer-links { position: fixed; bottom: 85px; left: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
+        .contact-icon { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; font-size: 20px; }
+        
+        #musicPlayerWrap { position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none; }
+        
+        /* Store Styles */
+        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .shop-item { background: rgba(255,255,255,0.1); border: 1px solid var(--neon-blue); border-radius: 10px; padding: 10px; }
+    </style>
+</head>
+<body id="bodyTag">
+    <div id="loader">انتضر شوي ياحلو ❤️‍🩹...</div>
+    <div class="bg-overlay"></div>
+
+    <div class="top-controls">
+        <button class="theme-btn" style="background: #222; color: #fff;" onclick="setTheme('boy')">ولادي ☠️</button>
+        <button class="theme-btn" style="background: #ffc0cb;" onclick="setTheme('girl')">بناتي 💕</button>
+        <button class="theme-btn" onclick="toggleMusic()"><i class="fas fa-music"></i></button>
+    </div>
+
+    <div id="musicPlayerWrap">
+        <iframe id="ytPlayer" width="1" height="1" src="https://www.youtube.com/embed/bg4-Y3O6NXs?enablejsapi=1" frameborder="0"></iframe>
+    </div>
+
+    <div id="login-screen" class="login-container">
+        <div class="neon-box">
+            <div style="font-size: 50px;">🏦</div>
+            <h2>بنك سنو المركزي</h2>
+            <input type="text" id="userIn" class="neon-input" placeholder="اسم المستخدم">
+            <input type="password" id="passIn" class="neon-input" placeholder="كلمة المرور">
+            <button class="neon-btn" onclick="login()">دخول آمن</button>
+        </div>
+    </div>
+
+    <div id="main-app">
+        <div id="tab-home" class="section active">
+            <div class="mada-card">
+                <div style="display:flex; justify-content:space-between"><span>mada</span><i class="fas fa-wifi"></i></div>
+                <div style="margin-top:40px; font-size:18px; letter-spacing:2px">**** **** **** <span id="cardLast">00</span></div>
+                <div style="margin-top:30px;">
+                    <small id="userNickShow">الاسم</small><br>
+                    <span style="font-size:26px" id="userBalance">0</span> <small>بوينت🪙</small>
+                </div>
+            </div>
+            <div id="orderStatus" style="text-align:center; color:gold; margin-bottom:10px;"></div>
+            <div class="neon-box" style="margin-top:20px; width:90%; margin:auto;">
+                <p id="adminAd">📢 السلام عليكم ورحمة الله وبركاته... دمتم بخير وسعادة 🌼💖</p>
+                <button class="neon-btn" style="padding:5px 15px" onclick="changePassPrompt()">تغيير كلمة السر</button>
+            </div>
+        </div>
+
+        <div id="tab-bank" class="section">
+            <div class="neon-box">
+                <h3>🏦 إرسال حوالة سريعة</h3>
+                <input type="text" id="bankSearch" class="neon-input" placeholder="بحث عن مستلم..." oninput="updateBankList()">
+                <select id="targetUser" class="neon-input" style="background:#111; color:white;"></select>
+                <input type="password" id="bankPass" class="neon-input" placeholder="كلمة مرورك للتأكيد">
+                <input type="number" id="bankAmount" class="neon-input" placeholder="المبلغ">
+                <button class="neon-btn" onclick="sendMoney()">تأكيد التحويل</button>
+            </div>
+        </div>
+
+        <div id="tab-shop" class="section">
+            <div class="neon-box">
+                <h3>🛒 متجر المكافآت</h3>
+                <div id="shopList" class="shop-grid"></div>
+            </div>
+        </div>
+
+        <div id="tab-admin" class="section">
+            <div class="neon-box">
+                <h3>⚙️ لوحة التحكم السحابية</h3>
+                <div id="adminControls">
+                    <button class="neon-btn" style="margin:5px" onclick="toggleDiv('addUserDiv')">إضافة حساب</button>
+                    <button class="neon-btn" style="margin:5px" onclick="toggleDiv('userListDiv');">قائمة الأعضاء</button>
+                    <button class="neon-btn" style="margin:5px" onclick="toggleDiv('shopManageDiv')">إدارة المتجر</button>
+                    <button class="neon-btn" style="margin:5px" onclick="toggleDiv('ordersManageDiv')">الطلبات</button>
+                </div>
+
+                <div id="addUserDiv" style="display:none; margin-top:10px;">
+                    <input type="text" id="nNick" class="neon-input" placeholder="اللقب">
+                    <input type="text" id="nUser" class="neon-input" placeholder="اسم المستخدم">
+                    <input type="text" id="nPass" class="neon-input" placeholder="كلمة المرور">
+                    <input type="number" id="nBal" class="neon-input" placeholder="المبلغ">
+                    <select id="nRole" class="neon-input" style="background:#111">
+                        <option value="member">عضو</option>
+                        <option value="admin">مشرف</option>
+                    </select>
+                    <button class="neon-btn" onclick="addNewUser()">إضافة</button>
+                </div>
+
+                <div id="shopManageDiv" style="display:none; margin-top:10px;">
+                    <input type="text" id="itName" class="neon-input" placeholder="اسم السلعة">
+                    <input type="number" id="itPrice" class="neon-input" placeholder="السعر">
+                    <button class="neon-btn" onclick="addShopItem()">إضافة سلعة</button>
+                    <div id="adminShopList"></div>
+                </div>
+
+                <div id="ordersManageDiv" style="display:none; margin-top:10px;">
+                    <div id="adminOrdersList"></div>
+                </div>
+
+                <div id="userListDiv" style="display:none; margin-top:15px; max-height:400px; overflow-y:auto;">
+                    <table>
+                        <thead><tr><th>اللقب</th><th>الرصيد</th><th>إجراء</th></tr></thead>
+                        <tbody id="usersTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-links" id="adminLinks" style="display:none;">
+        <a href="https://wa.me/966000000000" target="_blank" class="contact-icon" style="background:#25d366;"><i class="fab fa-whatsapp"></i></a>
+    </div>
+
+    <nav class="bottom-nav" id="navBar" style="display:none">
+        <button class="nav-item" onclick="showTab('tab-home')"><i class="fas fa-home"></i><br>الرئيسية</button>
+        <button class="nav-item" onclick="showTab('tab-bank')"><i class="fas fa-university"></i><br>البنك</button>
+        <button class="nav-item" onclick="showTab('tab-shop')"><i class="fas fa-shopping-cart"></i><br>المتجر</button>
+        <button class="nav-item" id="adminTabBtn" onclick="showTab('tab-admin')" style="display:none"><i class="fas fa-user-shield"></i><br>الإدارة</button>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, onSnapshot, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyAXja7crg6YouJDj_bZ4m--o1HKNIOnnkk",
+          authDomain: "bank-7f833.firebaseapp.com",
+          projectId: "bank-7f833",
+          storageBucket: "bank-7f833.firebasestorage.app",
+          messagingSenderId: "367628564974",
+          appId: "1:367628564974:web:79d196d8d25c4b887336ff"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let users = [];
+        let currentUser = null;
+
+        onSnapshot(collection(db, "users"), (snapshot) => {
+            users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            if (currentUser) currentUser = users.find(u => u.user === currentUser.user);
+            if(currentUser) loadUI();
+            renderUsersTable();
+            updateBankList();
+            document.getElementById('loader').style.display = 'none';
+        });
+
+        onSnapshot(collection(db, "shop"), (snap) => {
+            const items = snap.docs.map(d => ({id: d.id, ...d.data()}));
+            renderShop(items);
+        });
+
+        onSnapshot(collection(db, "orders"), (snap) => {
+            const orders = snap.docs.map(d => ({id: d.id, ...d.data()}));
+            renderAdminOrders(orders);
+            if(currentUser) {
+                const myOrd = orders.find(o => o.uid === currentUser.id);
+                if(myOrd) document.getElementById('orderStatus').innerText = myOrd.status;
+            }
+        });
+
+        window.login = function() {
+            const u = document.getElementById('userIn').value;
+            const p = document.getElementById('passIn').value;
+            const user = users.find(x => x.user === u && x.pass === p);
+            if(user) {
+                currentUser = user;
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-app').style.display = 'block';
+                document.getElementById('navBar').style.display = 'flex';
+                loadUI();
+                updateBankList();
+                showToast(`أهلاً نورت البنك يا أحلى ${user.nickname} 😍✨`);
+            } else { alert("أوبس! بياناتك غلط يا عسل 🙄 تأكد من الاسم والباسورد"); }
+        }
+
+        window.loadUI = function() {
+            document.getElementById('userBalance').innerText = Number(currentUser.balance).toLocaleString();
+            document.getElementById('userNickShow').innerText = currentUser.nickname;
+            document.getElementById('cardLast').innerText = String(currentUser.pass).slice(-2);
+            if(currentUser.role === 'admin' || currentUser.role === 'dev') document.getElementById('adminTabBtn').style.display = 'block';
+            if(currentUser.role === 'dev') document.getElementById('adminLinks').style.display = 'flex';
+        }
+
+        window.updateBankList = function() {
+            const s = document.getElementById('bankSearch').value.toLowerCase();
+            const sel = document.getElementById('targetUser');
+            if(!sel) return;
+            sel.innerHTML = '<option value="">اختر مستلم... 😉</option>';
+            users.filter(x => x.nickname.toLowerCase().includes(s) && x.user !== currentUser?.user)
+              .forEach(x => {
+                let o = document.createElement('option');
+                o.value = x.id; o.text = x.nickname;
+                sel.add(o);
+            });
+        }
+
+        window.sendMoney = async function() {
+            const tid = document.getElementById('targetUser').value;
+            const amt = parseInt(document.getElementById('bankAmount').value);
+            const pass = document.getElementById('bankPass').value;
+            if(pass !== currentUser.pass) return alert("الباسورد غلط.. شكلك مو صاحب الحساب؟ 🤔");
+            if(amt > currentUser.balance) return alert("رصيدك ما يكفي، روح اشتغل وجيب بوينت! 💸🤣");
+            
+            if(confirm(`ترا فلوسك ماترجع لك، متأكد تبي ترسل ${amt} بوينت؟ 😅💸`)) {
+                const tu = users.find(u => u.id === tid);
+                await updateDoc(doc(db, "users", currentUser.id), { balance: currentUser.balance - amt });
+                await updateDoc(doc(db, "users", tid), { balance: tu.balance + amt });
+                showToast("تم التحويل بنجاح ✅");
+            }
+        }
+
+        window.renderUsersTable = function() {
+            const tbody = document.getElementById('usersTable');
+            if(!tbody) return;
+            tbody.innerHTML = users.map((u) => `
+                <tr><td>${u.nickname}</td><td>${u.balance}</td><td>
+                    <button onclick="addCash('${u.id}', ${u.balance})" style="color:green;"><i class="fas fa-plus"></i></button>
+                    <button onclick="minCash('${u.id}', ${u.balance})" style="color:orange;"><i class="fas fa-minus"></i></button>
+                    <button onclick="delUsr('${u.id}')" style="color:red;"><i class="fas fa-trash"></i></button>
+                </td></tr>`).join('');
+        }
+
+        window.addCash = async function(id, cur) { const a = prompt("كم تبي تزيد رصيده؟ 💰:"); if(a) await updateDoc(doc(db, "users", id), { balance: cur + parseInt(a) }); }
+        window.minCash = async function(id, cur) { const a = prompt("كم تبي تخفس بميزانيته؟ 🔥:"); if(a) await updateDoc(doc(db, "users", id), { balance: cur - parseInt(a) }); }
+        window.delUsr = async function(id) { if(confirm("أفااا بتطرده من البنك؟ 😢")) await deleteDoc(doc(db, "users", id)); }
+
+        window.addShopItem = async function() {
+            const n = document.getElementById('itName').value, p = parseInt(document.getElementById('itPrice').value);
+            if(n && p) await addDoc(collection(db, "shop"), { name: n, price: p });
+        }
+
+        function renderShop(items) {
+            document.getElementById('shopList').innerHTML = items.map(i => `
+                <div class="shop-item">
+                    <b>${i.name}</b><br>🪙 ${i.price}<br>
+                    <button class="neon-btn" style="padding:5px; margin-top:5px; width:100%;" onclick="buy('${i.name}', ${i.price})">شراء</button>
+                </div>`).join('');
+            document.getElementById('adminShopList').innerHTML = items.map(i => `
+                <div style="display:flex; justify-content:space-between; margin:5px;"><span>${i.name}</span> 
+                <i class="fas fa-trash" style="color:red;" onclick="delItem('${i.id}')"></i></div>`).join('');
+        }
+        window.delItem = async function(id) { await deleteDoc(doc(db, "shop", id)); }
+
+        window.buy = async function(name, p) {
+            if(currentUser.balance < p) return showToast("ما عندك بوينت كافي! 😂❌");
+            if(confirm(`بتشتري ${name}؟ ترا بينقص رصيدك ${p} بوينت! 😍`)) {
+                await updateDoc(doc(db, "users", currentUser.id), { balance: currentUser.balance - p });
+                await addDoc(collection(db, "orders"), { uid: currentUser.id, nick: currentUser.nickname, itemName: name, status: "طلبك قيد المراجعه ⏳" });
+                showToast("تم الطلب! انتظر المشرف يوافق 😉⏳");
+            }
+        }
+
+        function renderAdminOrders(orders) {
+            document.getElementById('adminOrdersList').innerHTML = orders.map(o => `
+                <div style="background:rgba(255,255,255,0.05); padding:10px; margin:5px; border-radius:10px;">
+                    ${o.nick}: ${o.itemName} <br>
+                    <button onclick="updOrd('${o.id}','تم قبول طلبك سيتم ارساله في قروب الوورك ✅')">قبول</button>
+                    <button onclick="updOrd('${o.id}','عذرا تم رفض طلبك من المشرف ${currentUser.nickname} ❌')">رفض</button>
+                </div>`).join('');
+        }
+        window.updOrd = async function(id, m) { await updateDoc(doc(db, "orders", id), { status: m }); alert("تم الرد على المسكين 😂"); }
+
+        window.addNewUser = async function() {
+            const n = document.getElementById('nNick').value, u = document.getElementById('nUser').value, p = document.getElementById('nPass').value, b = parseInt(document.getElementById('nBal').value || 0), r = document.getElementById('nRole').value;
+            if(n && u && p) await addDoc(collection(db, "users"), { nickname: n, user: u, pass: p, balance: b, role: r });
+        }
+
+        window.showTab = function(id) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+        window.toggleDiv = function(id) { const d = document.getElementById(id); d.style.display = d.style.display==='none'?'block':'none'; }
+        window.changePassPrompt = async function() { const p = prompt("اكتب الباسورد الجديد، بس لا تنساه! 🔒:"); if(p) await updateDoc(doc(db, "users", currentUser.id), { pass: p }); }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        let isMusicPlaying = false;
+        function toggleMusic() {
+            const iframe = document.getElementById('ytPlayer');
+            if(!isMusicPlaying) { 
+                iframe.src += "&autoplay=1"; 
+                isMusicPlaying = true; 
+                showToast("استمتع بالجو يا عسل 🎵🔥"); 
+            }
+            else { 
+                iframe.src = iframe.src.replace("&autoplay=1", ""); 
+                isMusicPlaying = false; 
+                showToast("تم إيقاف الموسيقى 🤫"); 
+            }
+        }
+
+        function setTheme(m) {
+            const b = document.getElementById('bodyTag');
+            if(m === 'boy') { 
+                b.style.backgroundColor = "#0d0d0d"; 
+                document.documentElement.style.setProperty('--neon-blue', '#00d4ff');
+                showToast("تم تفعيل وضع الوحوش ☠️");
+            }
+            else { 
+                b.style.backgroundColor = "#fff0f5"; 
+                document.documentElement.style.setProperty('--neon-blue', '#ff69b4');
+                showToast("يا رقة المكان! تم تفعيل الوضع البناني 💕");
+            }
+        }
+
+        function showToast(msg) { 
+            Toastify({ 
+                text: msg, 
+                duration: 3000, 
+                gravity: "top", 
+                position: "center", 
+                style: { background: "var(--neon-blue)", color: "black" } 
+            }).showToast(); 
+        }
+    </script>
+</body>
+</html>
